@@ -95,9 +95,11 @@ class PsGen:
         self.out.write("/scal {" + str (int (min (720 / h, 540 / w))) +
                        " mul} def\n\n\n")
         self.out.write("0 setgray 3 setlinewidth newpath\n")
-        self.out.write("1 scal 1 scal moveto\n")
+        self.out.write("2 scal 1 scal moveto\n")
         self.out.write(str(w + 1) + " scal 1 scal lineto\n")
         self.out.write(str(w + 1) + " scal " + str(h + 1) + " scal lineto\n")
+        self.out.write("stroke\n " + str(w) + " scal " + str (h + 1) +
+                       " scal moveto\n")
         self.out.write("1 scal " + str(h + 1) + " scal lineto\n")
         self.out.write("1 scal 1 scal lineto stroke\n\n 1 setlinewidth\n\n")
 
