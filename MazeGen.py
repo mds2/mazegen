@@ -115,15 +115,18 @@ class PsGen:
         self.out.write("showpage\n")
 
 
-(w, h) = (9, 12)
-#(w, h) = (30, 40)
-# ( w, h) = (18, 24)
-gen = MazeGen(w, h)
-maze = gen.make_maze()
-render = MazeRender(maze)
-ps = PsGen(w, h)
-render.spew(ps.process)
-ps.finish()
+if __name__ == "__main__":
+    (w, h) = (9, 12)
+    #(w, h) = (30, 40)
+    # ( w, h) = (18, 24)
+    gen = MazeGen(w, h)
+    maze = gen.make_maze()
+    render = MazeRender(maze)
+    ps = PsGen(w, h)
+    render.spew(ps.process)
+    ps.finish()
+
+
 
 
 
