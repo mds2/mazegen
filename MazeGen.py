@@ -19,15 +19,15 @@ class MazeGen:
         self.doorways = {}
 
     def setrep(self, i):
-        rslt = i
-        while self.sets[rslt] != rslt:
-            rslt = self.sets[rslt]
+        result = i
+        while self.sets[result] != result:
+            result = self.sets[result]
         trav = i
-        while trav != rslt:
+        while trav != result:
             nxt = self.sets[trav]
-            self.sets[trav] = rslt
+            self.sets[trav] = result
             trav = nxt
-        return rslt
+        return result
 
     def merge(self, i, j):
         if (self.setrep(i) == self.setrep(j)):
@@ -62,7 +62,7 @@ class MazeGen:
                 if not self.doorways.has_key((i,j))]
 
     def get_coords(self, cell):
-        return ((cell % self.w), int (cell / self.w))
+        return ((cell % self.w), int(cell / self.w))
 
     def make_maze(self):
         while (self.numsets > 1):
@@ -92,13 +92,13 @@ class PsGen:
     def __init__(self, w, h, file = sys.stdout):
         self.out = file
         self.out.write("%!  mazes\n")
-        self.out.write("/scal {" + str (int (min (720 / h, 540 / w))) +
+        self.out.write("/scal {" + str(int(min(720 / h, 540 / w))) +
                        " mul} def\n\n\n")
         self.out.write("0 setgray 3 setlinewidth newpath\n")
         self.out.write("2 scal 1 scal moveto\n")
         self.out.write(str(w + 1) + " scal 1 scal lineto\n")
         self.out.write(str(w + 1) + " scal " + str(h + 1) + " scal lineto\n")
-        self.out.write("stroke\n " + str(w) + " scal " + str (h + 1) +
+        self.out.write("stroke\n " + str(w) + " scal " + str(h + 1) +
                        " scal moveto\n")
         self.out.write("1 scal " + str(h + 1) + " scal lineto\n")
         self.out.write("1 scal 1 scal lineto stroke\n\n 1 setlinewidth\n\n")
@@ -116,6 +116,7 @@ class PsGen:
 
 
 (w, h) = (9, 12)
+#(w, h) = (30, 40)
 # ( w, h) = (18, 24)
 gen = MazeGen(w, h)
 maze = gen.make_maze()
