@@ -1,3 +1,7 @@
+# Generates a set of examples like those in the "examples" directory.
+# Stuffs them in the directory "my_examples"
+# Has not been tested on Windows.
+
 import MazeGen
 
 import os
