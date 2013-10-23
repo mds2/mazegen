@@ -5,6 +5,12 @@ Simple python program to generate postscript mazes.
 
 Intended to entertain the author's child.
 
+Inspired by Olin Shivers' description of an earlier Scheme program.
+
+[
+http://www.ccs.neu.edu/home/shivers/mazes.html
+](http://www.ccs.neu.edu/home/shivers/mazes.html)
+
 Files include
 * MazeGen.py
 
