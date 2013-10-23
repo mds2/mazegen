@@ -94,6 +94,10 @@ class PsGen:
         self.out.write("%!  mazes\n")
         self.out.write("/scal {" + str(int(min(720 / h, 540 / w))) +
                        " mul} def\n\n\n")
+        self.dimensions = (w, h)
+
+    def produce_border(self):
+        (w, h) = self.dimensions
         self.out.write("0 setgray 3 setlinewidth newpath\n")
         self.out.write("2 scal 1 scal moveto\n")
         self.out.write(str(w + 1) + " scal 1 scal lineto\n")
@@ -112,6 +116,7 @@ class PsGen:
         self.out.write("stroke\n")
 
     def finish(self):
+        self.produce_border()
         self.out.write("showpage\n")
 
 
