@@ -15,9 +15,14 @@ class MazeGen:
         self.numsets = w_ * h_
         self.w = w_
         self.h = h_
+        # Uses disjoint-set unionfind
+        # self.sets is the mapping from each grid cell
+        # to its set representative.
+        # Grid cells are indexed by integer
         self.sets = [i for i in range(0, self.numsets)]
         self.doorways = {}
 
+    # Finds the set representative for a given cell
     def setrep(self, i):
         result = i
         while self.sets[result] != result:
@@ -29,6 +34,8 @@ class MazeGen:
             trav = nxt
         return result
 
+    # Merges two sets (for the purposes of tracking
+    # connectivity)
     def merge(self, i, j):
         if (self.setrep(i) == self.setrep(j)):
             return self.setrep(i)
@@ -36,6 +43,8 @@ class MazeGen:
         self.sets[self.setrep(i)] = self.setrep(j)
         return self.setrep(i)
 
+    # Tries to knock down a wall between two grid cells.
+    # Updates connected-item set information if successful.
     def make_door(self, i, j):
         if (i >= (self.w * self.h) or j >= (self.w * self.h) or i == j):
             return False
@@ -46,6 +55,7 @@ class MazeGen:
         self.merge(i,j)
         return True
 
+    # Selects a neighbor either down or to the right of "node"
     def neighbor(self, node, up_or_down):
         if ((node + 1) % self.w == 0 and up_or_down == 0):
             return node # failure case, return self as neighbor

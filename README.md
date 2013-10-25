@@ -5,7 +5,8 @@ Simple python program to generate postscript mazes.
 
 Intended to entertain the author's child.
 
-Inspired by Olin Shivers' description of an earlier Scheme program.
+Inspired by Olin Shivers' description of an earlier Scheme program
+with a nearly identical algorithm.
 
 [
 http://www.ccs.neu.edu/home/shivers/mazes.html
@@ -14,8 +15,9 @@ http://www.ccs.neu.edu/home/shivers/mazes.html
 Files include
 * MazeGen.py
 
-  Generates random maze through variant of Kruska's algorithm.
+  Generates random maze through variant of Kruskal's algorithm.
   Contains a class to output maze as postscript file.
+  Can run as standalone application.
 
 * GenerateExampleOutput.py
 
