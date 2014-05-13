@@ -11,7 +11,7 @@ import random
 import sys
 
 class MazeGen:
-    def __init__(self, w_, h_):
+    def __init__ (self, w_, h_):
         self.numsets = w_ * h_
         self.w = w_
         self.h = h_
@@ -20,10 +20,17 @@ class MazeGen:
         # to its set representative.
         # Grid cells are indexed by integer
         self.sets = [i for i in range(0, self.numsets)]
-        self.doorways = {}
+        self.max_horiz_edge = w_ * h_
+        self.walls = []
+        self.edges = [r * w_ + c for c in range (w_ - 1)
+                      for r in range (h_)]
+        self.edges += [r * w_ + c + self.max_horiz_edge
+                       for c in range (w_)
+                       for r in range (h_ - 1)]
+        random.shuffle (self.edges)
 
     # Finds the set representative for a given cell
-    def setrep(self, i):
+    def setrep (self, i):
         result = i
         while self.sets[result] != result:
             result = self.sets[result]
@@ -36,50 +43,34 @@ class MazeGen:
 
     # Merges two sets (for the purposes of tracking
     # connectivity)
-    def merge(self, i, j):
+    def merge (self, i, j):
         if (self.setrep(i) == self.setrep(j)):
             return self.setrep(i)
         self.numsets -= 1
         self.sets[self.setrep(i)] = self.setrep(j)
         return self.setrep(i)
 
-    # Tries to knock down a wall between two grid cells.
-    # Updates connected-item set information if successful.
-    def make_door(self, i, j):
-        if (i >= (self.w * self.h) or j >= (self.w * self.h) or i == j):
-            return False
-        if (self.setrep(i) == self.setrep(j)):
-            return False
-        (i,j) = sorted((i,j))
-        self.doorways[(i,j)] = (i,j)
-        self.merge(i,j)
-        return True
+    def get_walls (self):
+        return self.walls
 
-    # Selects a neighbor either down or to the right of "node"
-    def neighbor(self, node, up_or_down):
-        if ((node + 1) % self.w == 0 and up_or_down == 0):
-            return node # failure case, return self as neighbor
-        return node + 1 + up_or_down * (self.w - 1)
-
-    def get_walls(self):
-        num_cells = self.w * self.h
-        walls_lr = [(i, i + 1)
-                    for i in range(num_cells) if (i % self.w) != self.w - 1]
-        walls_ud = [(i, i + self.w)
-                    for i in range(num_cells) if int (i / self.w) !=
-                                                  self.h - 1]
-        return [(i,j) for (i,j) in walls_lr + walls_ud
-                if not self.doorways.has_key((i,j))]
-
-    def get_coords(self, cell):
+    def get_coords (self, cell):
         return ((cell % self.w), int(cell / self.w))
 
-    def make_maze(self):
-        while (self.numsets > 1):
-            cell = random.randrange (self.w * self.h)
-            self.make_door(cell,
-                           self.neighbor(cell,
-                                         random.randrange(2)))
+    def edge_2_cells (self, edge):
+        if (edge >= self.max_horiz_edge):
+            edge -= self.max_horiz_edge
+            return (edge, edge + self.w)
+        return (edge, edge + 1)
+
+    def make_maze (self):
+        if self.walls != []:
+            return self
+        for edge in self.edges:
+            (i, j) = self.edge_2_cells (edge)
+            if self.setrep (i) == self.setrep (j):
+                self.walls.append ((i, j))
+            else:
+                self.merge (i, j)
         return self
 
 class MazeRender:
@@ -88,7 +79,7 @@ class MazeRender:
 
     def wall_corners(self, cell):
         (i, j) = self.maze.get_coords(cell)
-        return [(i + 1, j + 1), (i + 2, j + 1), (i + 1, j + 2), (i + 2, j + 2)]
+        return [(i + 1, j + 1), (i + 2, j + 1), (i + 2, j + 2), (i + 1, j + 2)]
 
     def cell_pair_2_wall(self, (cell1, cell2)):
         return [i for i in self.wall_corners(cell1) if
@@ -96,6 +87,8 @@ class MazeRender:
 
     def spew(self, output_func = lambda pair: sys.stdout.write(str(pair))):
         for (i, j) in self.maze.get_walls():
+            if len (self.cell_pair_2_wall((i, j))) < 1:
+                raise Exception ("Not adjacent " + str((i, j)))
             output_func(self.cell_pair_2_wall((i, j)))
 
 class PsGen:
