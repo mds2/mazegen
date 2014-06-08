@@ -8,10 +8,16 @@ Intended to entertain the author's child.
 Inspired by Olin Shivers' description of an earlier Scheme program
 with a nearly identical algorithm.
 
-[
+[ 
 http://www.ccs.neu.edu/home/shivers/mazes.html
 ](http://www.ccs.neu.edu/home/shivers/mazes.html)
 
+Example wired up to AppEngine at
+
+[ 
+https://maze-maker.appspot.com/
+](https://maze-maker.appspot.com/ )
+ 
 Files include
 * MazeGen.py
 
