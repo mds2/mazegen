@@ -28,6 +28,7 @@ class MazeGen:
                        for c in range (w_)
                        for r in range (h_ - 1)]
         random.shuffle (self.edges)
+        self.excluded_walls = {}
 
     # Finds the set representative for a given cell
     def setrep (self, i):
@@ -62,12 +63,23 @@ class MazeGen:
             return (edge, edge + self.w)
         return (edge, edge + 1)
 
+    def clear_block(self, xy, wh):
+        for i in range(xy[0], xy[0] + wh[0]):
+            for j in range(xy[1], xy[1] + wh[1]):
+                c = j * self.w + i
+                self.merge(c, c + 1)
+                self.merge(c, c + self.w)
+                self.excluded_walls[(c, c+1)] = True
+                self.excluded_walls[(c, c + self.w)] = True
+
     def make_maze (self):
         if self.walls != []:
             return self
         for edge in self.edges:
             (i, j) = self.edge_2_cells (edge)
             if self.setrep (i) == self.setrep (j):
+                if (i,j) in self.excluded_walls:
+                    continue
                 self.walls.append ((i, j))
             else:
                 self.merge (i, j)
@@ -95,9 +107,25 @@ class PsGen:
     def __init__(self, w, h, file = sys.stdout):
         self.out = file
         self.out.write("%!  mazes\n")
-        self.out.write("/scal {" + str(int(min(720 / h, 540 / w))) +
+        self.out.write("/scal {" + str(self.get_scale(w,h)) +
                        " mul} def\n\n\n")
         self.dimensions = (w, h)
+
+    def get_scale(self, w, h):
+        return int(min(720 / h, 540 / w))
+
+    def blocks_per_text(self, str_list):
+        nlines = len(str_list)
+        ncols = max([len(l) for l in str_list])
+        s = self.get_scale(self.dimensions[0], self.dimensions[1])
+        return (int(ncols * 12.0 /s + 1.0) + 1,
+                int(nlines * 18.0 / s + 1.0))
+
+    def add_text(self, cell, text):
+        self.out.write("\ngsave\n")
+        self.out.write("\n/Deja-Vu-Mono findfont 20 scalefont setfont\n")
+        self.out.write(str(cell[0] + 2) + " scal " + str(cell[1] + 2) + " scal moveto (" +
+                       text + " ) show grestore\n")
 
     def produce_border(self):
         (w, h) = self.dimensions
@@ -124,13 +152,23 @@ class PsGen:
 
 
 if __name__ == "__main__":
-    (w, h) = (9, 12)
-    #(w, h) = (30, 40)
+    # (w, h) = (9, 12)
+    (w, h) = (30, 40)
     # ( w, h) = (18, 24)
+    (w, h) = (60, 80)
     gen = MazeGen(w, h)
+    ps = PsGen(w, h)
+    ps.add_text((5,10), "Hello67890 There789")
+    ps.add_text((10,30), " here is more text ")
+    ps.add_text((2, 30), "hi")
+    long_string = "llanfairpwllgwyngyllgogerychwyrndrobw" # + llllantysiliogogogoch"
+    ps.add_text((2, 50), long_string)
+    gen.clear_block((5,10), ps.blocks_per_text(["Hello67890 There789"]))
+    gen.clear_block((10, 30), ps.blocks_per_text([" here is more text "]))
+    gen.clear_block((2, 30), ps.blocks_per_text(["hi"]))
+    gen.clear_block((2, 50), ps.blocks_per_text([long_string]))
     maze = gen.make_maze()
     render = MazeRender(maze)
-    ps = PsGen(w, h)
     render.spew(ps.process)
     ps.finish()
 
