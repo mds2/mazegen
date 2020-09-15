@@ -13,7 +13,7 @@ def make_flyer(lines, wh=(60, 80), outfile = sys.stdout):
     ps = PsGen(w, h, file=outfile)
     _, height_blocks = ps.blocks_per_text(lines)
     stepsize = int(h / (len(lines) + 1))
-    while stepsize < 2 + ps.blocks_per_text("hi")[1]:
+    while stepsize < 2 + ps.blocks_per_text(["hi"])[1]:
         lines = lines[:(len(lines)/2)]
         _, height_blocks = ps.blocks_per_text(lines)
         stepsize = int(h / (len(lines) + 1))
