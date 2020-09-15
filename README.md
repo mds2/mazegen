@@ -39,3 +39,10 @@ Files include
 
   Example output of MazeGen.py
 
+* FlyerMaker.py
+
+  Overlays lines of text from a file onto a maze.
+  Cuts out parts of the maze where text goes.
+  Sample input at `party.txt`
+  Sample output at `party.txt.ps`
+
