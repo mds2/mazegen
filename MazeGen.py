@@ -104,11 +104,14 @@ class MazeRender:
             output_func(self.cell_pair_2_wall((i, j)))
 
 class PsGen:
-    def __init__(self, w, h, file = sys.stdout):
+    def __init__(self, w, h, file = sys.stdout, offset=None):
         self.out = file
         self.out.write("%!  mazes\n")
         self.out.write("/scal {" + str(self.get_scale(w,h)) +
                        " mul} def\n\n\n")
+        if offset is not None:
+            self.out.write("{:} scal {:} scal translate\n".format(offset[0],
+                                                                  offset[1]))
         self.dimensions = (w, h)
 
     def get_scale(self, w, h):

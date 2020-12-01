@@ -43,6 +43,6 @@ Files include
 
   Overlays lines of text from a file onto a maze.
   Cuts out parts of the maze where text goes.
-  Sample input at `party.txt`
-  Sample output at `party.txt.ps`
+  Sample input at `free-poem.txt`
+  Sample output at `free-poem.txt.ps`
 

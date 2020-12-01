@@ -7,10 +7,10 @@ from MazeGen import *
 from random import randrange
 import sys
 
-def make_flyer(lines, wh=(60, 80), outfile = sys.stdout):
+def make_flyer(lines, wh=(60, 80), outfile = sys.stdout, offset=(3,3)):
     (w, h) = wh
     gen = MazeGen(w, h)
-    ps = PsGen(w, h, file=outfile)
+    ps = PsGen(w, h, file=outfile, offset=(5,5))
     _, height_blocks = ps.blocks_per_text(lines)
     stepsize = int(h / (len(lines) + 1))
     while stepsize < 2 + ps.blocks_per_text(["hi"])[1]:
